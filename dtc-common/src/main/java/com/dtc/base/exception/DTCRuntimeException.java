@@ -1,23 +1,24 @@
 package com.dtc.base.exception;
 
+import java.util.Optional;
+
 public class DTCRuntimeException extends RuntimeException{
 
 	private int code;
 	
 	private String msg;
 	
-	private Throwable throwable;
-	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1452283940024222510L;
 
+	public DTCRuntimeException() {}
+	
 	public DTCRuntimeException(int code,String msg,Throwable throwable){
-		super();
+		super(throwable);
 		this.code=code;
 		this.msg=msg;
-		this.throwable=throwable;
 	}
 	
 	public DTCRuntimeException(int code,String msg){
@@ -30,13 +31,10 @@ public class DTCRuntimeException extends RuntimeException{
 	}
 	
 	@Override
-	public synchronized Throwable getCause() {
-		return this.throwable;
-	}
-	
-	@Override
 	public String toString() {
-		return String.format("[%s]%s", code,msg);
+		return String.format("[%s]%s%s", code,msg,Optional.ofNullable(getCause()).map(x->{
+			return this.getCause().toString();
+		}).orElse(""));
 	}
 	
 	
